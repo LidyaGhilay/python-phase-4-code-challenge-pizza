@@ -25,12 +25,6 @@ def index():
     return "<h1>Code challenge</h1>"
 
 
-@app.route('/restaurants')
-def get_all_restaurants():
-    restaurants = Restaurant.query.all()
-    return [restaurant.to_dict(rules=['-restaurant_pizzas']) for restaurant in restaurants], 200
-
-
 @app.route('/restaurants/<int:id>', methods=['GET', 'DELETE'])
 def get_restaurants_by_id(id):
     restaurant = Restaurant.query.filter(Restaurant.id == id).first()
@@ -48,10 +42,10 @@ def get_restaurants_by_id(id):
         db.session.commit()
         return {}, 204
     
-@app.route('/pizzas')
-def get_all_pizzas():
-    pizzas = Pizza.query.all()
-    return [pizza.to_dict(rules=['-restaurants', '-restaurant_pizzas']) for pizza in pizzas], 200
+@app.route('/restaurants')
+def get_all_restaurants():
+    restaurants = Restaurant.query.all()
+    return [restaurant.to_dict(rules=['-restaurant_pizzas']) for restaurant in restaurants], 200
 
 @app.route('/restaurant_pizzas', methods=['POST'])
 def new_restaurant_pizza():
@@ -68,6 +62,13 @@ def new_restaurant_pizza():
     db.session.add(new_restaurant_piz)
     db.session.commit()
     return new_restaurant_piz.to_dict(), 201
+
+    
+@app.route('/pizzas')
+def get_all_pizzas():
+    pizzas = Pizza.query.all()
+    return [pizza.to_dict(rules=['-restaurants', '-restaurant_pizzas']) for pizza in pizzas], 200
+
 
    
 
